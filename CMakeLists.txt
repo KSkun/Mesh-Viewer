@@ -11,6 +11,6 @@ add_executable(${PROJECT_NAME}
 find_package(OpenGL REQUIRED)
 
 include_directories(glfw/include)
-link_libraries(glfw/lib/glfw3.lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/glfw/lib/glfw3.lib)
 
 include_directories(glad/include)
