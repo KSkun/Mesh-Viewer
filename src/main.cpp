@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include <glad/glad.h>
+#include <windows.h>
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
 int main() {
@@ -16,12 +17,6 @@ int main() {
         return -1;
     }
     glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
 
     glViewport(0, 0, 800, 600);
 
