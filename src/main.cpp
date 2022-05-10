@@ -58,7 +58,7 @@ int main() {
     glCompileShader(shaderVert);
     glGetShaderiv(shaderVert, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(shaderVert, 512, NULL, infoLog);
+        glGetShaderInfoLog(shaderVert, 512, nullptr, infoLog);
         std::cout << "Failed to compile vertex shader\n" << infoLog << std::endl;
     }
     std::ifstream ifFrag("../src/shader/triangle.frag");
@@ -71,7 +71,7 @@ int main() {
     glCompileShader(shaderFrag);
     glGetShaderiv(shaderFrag, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(shaderFrag, 512, NULL, infoLog);
+        glGetShaderInfoLog(shaderFrag, 512, nullptr, infoLog);
         std::cout << "Failed to compile fragment shader\n" << infoLog << std::endl;
     }
     auto program = glCreateProgram();
@@ -80,7 +80,7 @@ int main() {
     glLinkProgram(program);
     glGetProgramiv(program, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(program, 512, NULL, infoLog);
+        glGetProgramInfoLog(program, 512, nullptr, infoLog);
         std::cout << "Failed to link shader program\n" << infoLog << std::endl;
     }
     glDeleteShader(shaderVert);
