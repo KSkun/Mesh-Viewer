@@ -12,6 +12,8 @@ static float vertices[] = {
         0.0f, 0.5f, 0.0f
 };
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -26,6 +28,7 @@ int main() {
         return -1;
     }
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // init glad
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
@@ -105,4 +108,8 @@ int main() {
 
     glfwTerminate();
     return 0;
+}
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    glViewport(0, 0, width, height);
 }
