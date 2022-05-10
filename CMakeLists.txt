@@ -14,5 +14,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
 include_directories(glfw/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/glfw/lib/glfw3dll.lib)
+file(COPY ${PROJECT_SOURCE_DIR}/glfw/bin/glfw3.dll DESTINATION ${CMAKE_BINARY_DIR})
 
 include_directories(glad/include)

@@ -3,7 +3,7 @@
 #include <sstream>
 
 #include <windows.h>
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 static float vertices[] = {
@@ -21,11 +21,17 @@ int main() {
     // create window
     GLFWwindow *window = glfwCreateWindow(800, 600, "Mesh Viewer", nullptr, nullptr);
     if (!window) {
-        std::cerr << "Failed to create GLFW windows" << std::endl;
+        std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
+
+    // init glad
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        std::cerr << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
     // init vertex buffer
     unsigned int VBO, VAO;
@@ -40,6 +46,8 @@ int main() {
     glBindVertexArray(0);
 
     // compile & link shaders
+    int success;
+    char infoLog[512];
     std::ifstream ifVert("../src/shader/triangle.vert");
     std::stringstream ssVert;
     ssVert << ifVert.rdbuf();
@@ -48,18 +56,33 @@ int main() {
     auto shaderVert = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(shaderVert, 1, &bufVert, nullptr);
     glCompileShader(shaderVert);
+    glGetShaderiv(shaderVert, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(shaderVert, 512, NULL, infoLog);
+        std::cout << "Failed to compile vertex shader\n" << infoLog << std::endl;
+    }
     std::ifstream ifFrag("../src/shader/triangle.frag");
     std::stringstream ssFrag;
-    ssFrag << ifVert.rdbuf();
+    ssFrag << ifFrag.rdbuf();
     std::string strFrag = ssFrag.str();
     const char *bufFrag = strFrag.data();
     auto shaderFrag = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(shaderFrag, 1, &bufFrag, nullptr);
     glCompileShader(shaderFrag);
+    glGetShaderiv(shaderFrag, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(shaderFrag, 512, NULL, infoLog);
+        std::cout << "Failed to compile fragment shader\n" << infoLog << std::endl;
+    }
     auto program = glCreateProgram();
     glAttachShader(program, shaderVert);
     glAttachShader(program, shaderFrag);
     glLinkProgram(program);
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(program, 512, NULL, infoLog);
+        std::cout << "Failed to link shader program\n" << infoLog << std::endl;
+    }
     glDeleteShader(shaderVert);
     glDeleteShader(shaderFrag);
 
