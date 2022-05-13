@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.14)
+project(FBXImport)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+option(FBX_IMPORT_BUILD_TEST "Build the test executable" TRUE)
+option(FBX_BUILD_ZLIB "Build zlib" TRUE)
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/importer)
+
+if (FBX_IMPORT_BUILD_TEST)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/test)
+endif (FBX_IMPORT_BUILD_TEST)
