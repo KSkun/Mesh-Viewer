@@ -25,6 +25,7 @@ set(fbx_HEADERS
 
 add_library(FBXImport ${fbx_SOURCES} ${fbx_HEADERS})
 
+set(ZLIB_ROOT ../../zlib)
 find_package(ZLIB REQUIRED)
 target_include_directories(FBXImport PUBLIC ${ZLIB_INCLUDE_DIRS})
 target_link_libraries(FBXImport ZLIB::ZLIB)
