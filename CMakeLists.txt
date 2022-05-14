@@ -18,12 +18,19 @@ include_directories(${GLFW_INCLUDE_DIRS})
 include_directories(${glm_INCLUDE_DIRS})
 include_directories(3rdparty/plog/include)
 include_directories(3rdparty/obj-loader)
+include_directories(3rdparty/stb)
 
 add_executable(${PROJECT_NAME}
         ${Glad_SOURCE}
+        3rdparty/stb/stb_image.h
+
         src/main.cpp
         src/shader.h
         src/shader.cpp
+        src/material.h
+        src/material.cpp
+        src/mesh.h
+        src/mesh.cpp
         )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})

@@ -9,6 +9,7 @@ A C++/OpenGL mesh viewer.
 - GLM, a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications, https://github.com/g-truc/glm
 - Plog, portable, simple and extensible C++ logging library, https://github.com/SergiusTheBest/plog
 - OBJ-Loader, a simple, header only, .obj model file loader, https://github.com/Bly7/OBJ-Loader
+- stb, single-file public domain (or MIT licensed) libraries for C/C++, https://github.com/nothings/stb
 
 ## Resources
 

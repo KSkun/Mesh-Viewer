@@ -11,6 +11,7 @@
 
 #include <windows.h>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <plog/Log.h>
 
@@ -21,6 +22,8 @@ class ShaderProgram;
 class Shader {
     friend ShaderProgram;
 public:
+    Shader() {}
+
     explicit Shader(const std::string &path, GLenum type);
 
     virtual ~Shader();
@@ -32,6 +35,8 @@ protected:
 
 class ShaderProgram {
 public:
+    ShaderProgram() {}
+
     ShaderProgram(const Shader &vertex, const Shader &fragment);
 
     ShaderProgram(const std::string &vertexPath, const std::string &fragmentPath);
@@ -39,6 +44,14 @@ public:
     virtual ~ShaderProgram();
 
     void use() const;
+
+    void setInt(const std::string &name, int value) const {
+        glUniform1i(glGetUniformLocation(glProgram, name.data()), value);
+    }
+
+    void setMat4(const std::string &name, const glm::mat4 &mat) const {
+        glUniformMatrix4fv(glGetUniformLocation(glProgram, name.data()), 1, GL_FALSE, &mat[0][0]);
+    }
 
 protected:
     GLuint glProgram;
