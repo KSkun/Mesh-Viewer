@@ -18,13 +18,12 @@ public:
 
     explicit Texture2D(const std::string &path);
 
-    Texture2D(const char *data, int width, int height);
-
     virtual ~Texture2D();
 
     virtual void use(int unit) const;
 
 protected:
+    const unsigned char *data = nullptr;
     GLuint glTexture;
     int width, height;
 };
@@ -33,13 +32,16 @@ class Material {
 public:
     Material() {}
 
-    Material(const ShaderProgram &program, std::vector<Texture2D> textures);
+    Material(ShaderProgram *program, std::vector<Texture2D *> textures);
 
     virtual void use() const;
 
 protected:
-    ShaderProgram program;
-    std::vector<Texture2D> textures;
+    // don't delete them in dtor
+    // Material is just a combination of program, textures and parameters
+    // manage program & textures in models
+    ShaderProgram *program = nullptr;
+    std::vector<Texture2D *> textures;
 };
 
 #endif //MESH_VIEWER_MATERIAL_H

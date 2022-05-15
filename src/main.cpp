@@ -12,7 +12,7 @@
 #include "shader.h"
 #include "mesh.h"
 
-int width = 800, height = 600;
+int width = 1600, height = 900;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -41,18 +41,18 @@ int main() {
     }
 
     ShaderProgram program("../src/shader/common.vert", "../src/shader/ambient.frag");
-    Model lumine("../resource/lumine/Lumine.obj", program);
+    Model lumine("../resource/lumine/Lumine.obj", &program);
 
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, width, height);
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 model = glm::identity<glm::mat4>();
-        glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-                                     glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 10.0f, 20.0f),
+                                     glm::vec3(0.0f, 10.0f, 0.0f),
                                      glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / height,
+        glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float) width / height,
                                                 0.1f, 100.0f);
         program.setMat4("model", model);
         program.setMat4("view", view);

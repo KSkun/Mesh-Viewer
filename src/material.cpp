@@ -9,25 +9,13 @@
 
 #include <utility>
 
-Texture2D::Texture2D(const char *data, int width, int height) {
-    this->width = width;
-    this->height = height;
-    glGenTextures(1, &glTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, glTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-}
-
 Texture2D::Texture2D(const std::string &path) {
     if (!std::filesystem::exists(path)) {
         PLOG_FATAL << "Texture Load Error: file not found";
         std::throw_with_nested("file not found");
     }
     int channels;
-    auto data = stbi_load(path.data(), &width, &height, &channels, 0);
+    data = stbi_load(path.data(), &width, &height, &channels, 0);
     if (data == nullptr) {
         PLOG_FATAL << "Texture Load Error: unable to load image";
         std::throw_with_nested("unable to load image");
@@ -39,11 +27,13 @@ Texture2D::Texture2D(const std::string &path) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, glTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    stbi_image_free(data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 Texture2D::~Texture2D() {
+    if (data == nullptr) return;
     glDeleteTextures(1, &glTexture);
+    stbi_image_free((void *) data);
 }
 
 void Texture2D::use(int unit) const {
@@ -51,12 +41,12 @@ void Texture2D::use(int unit) const {
     glBindTexture(GL_TEXTURE_2D, glTexture);
 }
 
-Material::Material(const ShaderProgram &program, std::vector<Texture2D> textures) :
+Material::Material(ShaderProgram *program, std::vector<Texture2D *> textures) :
         program(program), textures(std::move(textures)) {}
 
 void Material::use() const {
-    program.use();
+    program->use();
     for (int i = 0; i < textures.size(); i++) {
-        textures[i].use(i);
+        textures[i]->use(i);
     }
 }

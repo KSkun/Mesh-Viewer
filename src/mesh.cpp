@@ -6,9 +6,8 @@
 
 #include <OBJ_Loader.h>
 
-Mesh::Mesh(const objl::Mesh &mesh, const std::string &objDir, const ShaderProgram &program) :
-        indexSize(mesh.Indices.size()),
-        material(program, {Texture2D(objDir + "/" + mesh.MeshMaterial.map_Kd)}) {
+Mesh::Mesh(const objl::Mesh &mesh, Material *material) :
+        indexSize(mesh.Indices.size()), material(material) {
     vertices = new float[8 * mesh.Vertices.size()];
     indices = new unsigned int[mesh.Indices.size()];
     memcpy(vertices, mesh.Vertices.data(), 8 * sizeof(float) * mesh.Vertices.size());
@@ -44,13 +43,18 @@ Mesh::~Mesh() {
 }
 
 void Mesh::draw() const {
-    material.use();
+    material->use();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     glBindVertexArray(glVAO);
     glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
-Model::Model(const std::string &path, const ShaderProgram &program) {
+Model::Model(const std::string &path, ShaderProgram *program) : program(program) {
     if (!std::filesystem::exists(path)) {
         PLOG_FATAL << "Model Load Error: file not found " + path;
         std::throw_with_nested("file not found " + path);
@@ -61,15 +65,22 @@ Model::Model(const std::string &path, const ShaderProgram &program) {
         std::throw_with_nested("unable to load model " + path);
     }
     auto objDir = std::filesystem::path(path).parent_path().string();
+    for (const auto &_material : loader->LoadedMaterials) {
+        materials[_material.name] = new Material(program,
+                                                 {new Texture2D(objDir + "/" + _material.map_Kd)});
+    }
     for (const auto &_mesh: loader->LoadedMeshes) {
-        meshes.push_back(new Mesh(_mesh, objDir, program));
+        meshes.push_back(new Mesh(_mesh, materials[_mesh.MeshMaterial.name]));
     }
 }
 
 Model::~Model() {
     delete loader;
-    for (const auto mesh : meshes) {
+    for (const auto mesh: meshes) {
         delete mesh;
+    }
+    for (const auto material : materials) {
+        delete material.second;
     }
 }
 

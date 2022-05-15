@@ -6,6 +6,7 @@
 #define MESH_VIEWER_MESH_H
 
 #include <string>
+#include <unordered_map>
 
 #include <windows.h>
 #include <glad/glad.h>
@@ -22,7 +23,7 @@ class Mesh {
 public:
     Mesh() {}
 
-    Mesh(const objl::Mesh &mesh, const std::string &objDir, const ShaderProgram &program);
+    Mesh(const objl::Mesh &mesh, Material *material);
 
     virtual ~Mesh();
 
@@ -33,22 +34,24 @@ protected:
     float *vertices;
     unsigned int *indices;
     GLuint glVAO, glVBO, glEBO;
-    Material material;
+    Material *material;
 };
 
 class Model {
 public:
     Model() {}
 
-    Model(const std::string &path, const ShaderProgram &program);
+    Model(const std::string &path, ShaderProgram *program);
 
     virtual ~Model();
 
     virtual void draw() const;
 
 protected:
-    objl::Loader *loader;
+    objl::Loader *loader = nullptr;
     std::vector<Mesh *> meshes;
+    ShaderProgram *program = nullptr;
+    std::unordered_map<std::string, Material *> materials;
 };
 
 #endif //MESH_VIEWER_MESH_H

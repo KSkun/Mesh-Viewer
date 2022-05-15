@@ -7,5 +7,5 @@ in vec2 texCoord;
 uniform sampler2D texDiffuse;
 
 void main() {
-    gl_FragColor = texture(texDiffuse, texCoord);
+    gl_FragColor = texture(texDiffuse, vec2(texCoord.x, 1.0 - texCoord.y));
 }
