@@ -46,8 +46,7 @@ void Mesh::draw() const {
     material->use();
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glEnable(GL_MULTISAMPLE);
 
     glBindVertexArray(glVAO);
     glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
