@@ -14,6 +14,6 @@ uniform mat3 norm;
 void main() {
     gl_Position = projection * view * model * vec4(aPosition, 1.0);
     worldPos = (model * vec4(aPosition, 1.0)).xyz;
-    normal = norm * aNormal;
-    texCoord = aTexCoord;
+    normal = normalize(norm * aNormal);
+    texCoord = vec2(aTexCoord.x, -aTexCoord.y);
 }
