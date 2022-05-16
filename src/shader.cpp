@@ -4,6 +4,8 @@
 
 #include "shader.h"
 
+#include <glm/gtc/matrix_inverse.hpp>
+
 Shader::Shader(const std::string &path, GLenum type) {
     if (!std::filesystem::exists(path)) {
         PLOG_FATAL << "Shader Compile Error: file not found";
@@ -82,4 +84,16 @@ ShaderProgram::~ShaderProgram() {
 
 void ShaderProgram::use() const {
     glUseProgram(glProgram);
+}
+
+void ShaderProgram::setMVPMatrices(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection) {
+    setMat4("model", model);
+    setMat4("view", view);
+    setMat4("projection", projection);
+
+    // calculate normal transformation
+    glm::mat3 norm(model);
+    norm = glm::inverse(norm);
+    norm = glm::transpose(norm);
+    setMat3("norm", norm);
 }

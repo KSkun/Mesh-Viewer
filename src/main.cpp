@@ -44,21 +44,19 @@ int main() {
     ShaderProgram program("../src/shader/common.vert", "../src/shader/ambient.frag");
     Model lumine("../resource/lumine/Lumine.obj", &program);
 
+    glm::mat4 model = glm::identity<glm::mat4>();
+    glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 10.0f, 20.0f),
+                                 glm::vec3(0.0f, 10.0f, 0.0f),
+                                 glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float) width / height,
+                                            0.1f, 100.0f);
+
     glViewport(0, 0, width, height);
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 model = glm::identity<glm::mat4>();
-        glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 10.0f, 20.0f),
-                                     glm::vec3(0.0f, 10.0f, 0.0f),
-                                     glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float) width / height,
-                                                0.1f, 100.0f);
-        program.setMat4("model", model);
-        program.setMat4("view", view);
-        program.setMat4("projection", projection);
-        program.setMat4("norm", model);
+        program.setMVPMatrices(model, view, projection);
         program.setInt("texDiffuse", 0);
         lumine.draw();
 

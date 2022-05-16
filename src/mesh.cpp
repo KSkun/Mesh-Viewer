@@ -66,7 +66,7 @@ Model::Model(const std::string &path, ShaderProgram *program) : program(program)
     auto objDir = std::filesystem::path(path).parent_path().string();
     for (const auto &_material : loader->LoadedMaterials) {
         materials[_material.name] = new Material(program,
-                                                 {new Texture2D(objDir + "/" + _material.map_Kd)});
+                                                 {loadTexture(objDir + "/" + _material.map_Kd)});
     }
     for (const auto &_mesh: loader->LoadedMeshes) {
         meshes.push_back(new Mesh(_mesh, materials[_mesh.MeshMaterial.name]));
@@ -81,10 +81,18 @@ Model::~Model() {
     for (const auto material : materials) {
         delete material.second;
     }
+    for (const auto texture : textures) {
+        delete texture.second;
+    }
 }
 
 void Model::draw() const {
     for (const auto &mesh: meshes) {
         mesh->draw();
     }
+}
+
+Texture2D *Model::loadTexture(const std::string &path) {
+    if (textures.contains(path)) return textures[path];
+    return textures[path] = new Texture2D(path);
 }

@@ -48,9 +48,12 @@ public:
     virtual void draw() const;
 
 protected:
+    Texture2D *loadTexture(const std::string &path);
+
     objl::Loader *loader = nullptr;
     std::vector<Mesh *> meshes;
     ShaderProgram *program = nullptr;
+    std::unordered_map<std::string, Texture2D *> textures;
     std::unordered_map<std::string, Material *> materials;
 };
 

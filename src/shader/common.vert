@@ -8,11 +8,12 @@ out vec3 worldPos;
 out vec3 normal;
 out vec2 texCoord;
 
-uniform mat4 model, view, projection, norm;
+uniform mat4 model, view, projection;
+uniform mat3 norm;
 
 void main() {
     gl_Position = projection * view * model * vec4(aPosition, 1.0);
     worldPos = (model * vec4(aPosition, 1.0)).xyz;
-    normal = (norm * vec4(aNormal, 0.0)).xyz;
+    normal = norm * aNormal;
     texCoord = aTexCoord;
 }

@@ -53,6 +53,12 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(glProgram, name.data()), 1, GL_FALSE, &mat[0][0]);
     }
 
+    void setMat3(const std::string &name, const glm::mat3 &mat) const {
+        glUniformMatrix3fv(glGetUniformLocation(glProgram, name.data()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    void setMVPMatrices(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection);
+
 protected:
     GLuint glProgram;
 };
