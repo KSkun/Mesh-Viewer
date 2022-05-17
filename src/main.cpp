@@ -11,10 +11,18 @@
 
 #include "shader.h"
 #include "mesh.h"
+#include "camera.h"
 
 int width = 1600, height = 900;
+Camera *camera = nullptr;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+void cursor_position_callback(GLFWwindow *window, double x, double y);
+
+void scroll_callback(GLFWwindow* window, double x, double y);
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 int main() {
     plog::init(plog::warning);
@@ -33,7 +41,6 @@ int main() {
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // init glad
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
@@ -41,15 +48,17 @@ int main() {
         return -1;
     }
 
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetKeyCallback(window, key_callback);
+
     ShaderProgram program("../src/shader/common.vert", "../src/shader/phong.frag");
     Model lumine("../resource/lumine/Lumine.obj", &program);
-
-    glm::vec3 eyePos(0.0f, 10.0f, 20.0f),
-            lookatPos(0.0f, 10.0f, 0.0f);
-    float fov = glm::radians(60.0f);
+    camera = new Camera({0.0f, 10.0f, 20.0f});
 
     glm::vec3 lightPos(0.0f, 10.0f, 5.0f),
-            lightColor(1.0f, 1.0f, 1.0f),
+            lightColor(3.0f, 3.0f, 1.0f),
             lightAmbient(1.0f, 1.0f, 1.0f);
 
     glViewport(0, 0, width, height);
@@ -58,11 +67,12 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 model = glm::identity<glm::mat4>();
-        glm::mat4 view = glm::lookAt(eyePos, lookatPos, glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 projection = glm::perspective(fov, (float) width / height, 0.1f, 100.0f);
+        glm::mat4 view = camera->getViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(camera->getFOV()),
+                                                (float) width / height, 0.1f, 100.0f);
 
         program.setMVPMatrices(model, view, projection);
-        program.setVec3("eyePos", eyePos);
+        program.setVec3("eyePos", camera->getPosition());
         program.setVec3("light.position", lightPos);
         program.setVec3("light.ambient", lightAmbient);
         program.setVec3("light.diffuse", lightColor);
@@ -73,6 +83,7 @@ int main() {
         glfwPollEvents();
     }
 
+    delete camera;
     glfwTerminate();
     return 0;
 }
@@ -81,4 +92,19 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     ::width = width;
     ::height = height;
     glViewport(0, 0, width, height);
+}
+
+void cursor_position_callback(GLFWwindow *window, double x, double y) {
+    bool pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+    if (camera != nullptr) camera->handleMouseInput(x, y, pressed);
+}
+
+void scroll_callback(GLFWwindow* window, double x, double y) {
+    if (camera != nullptr) camera->handleScrollInput(y);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        if (camera != nullptr) camera->handleKeyboardInput(key);
+    }
 }

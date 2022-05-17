@@ -31,6 +31,8 @@ add_executable(${PROJECT_NAME}
         src/material.cpp
         src/mesh.h
         src/mesh.cpp
+        src/camera.h
+        src/camera.cpp
         )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
