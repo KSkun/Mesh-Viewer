@@ -10,6 +10,12 @@ This application allows you to view 3D models in OBJ format with different mater
 
 Under development, new features are on the way ;)
 
+**Camera:**
+
+- WASD for close-far and left-right movement
+- Mouse drag for rotation
+- Mouse scroll for zoom
+
 **Rendering:**
 
 - Constant ambient light
