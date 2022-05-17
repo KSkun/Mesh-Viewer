@@ -4,8 +4,10 @@ in vec3 worldPos;
 in vec3 normal;
 in vec2 texCoord;
 
+out vec4 FragColor;
+
 uniform sampler2D texDiffuse;
 
 void main() {
-    gl_FragColor = texture(texDiffuse, vec2(texCoord.x, texCoord.y));
+    FragColor = texture(texDiffuse, vec2(texCoord.x, texCoord.y));
 }

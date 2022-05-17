@@ -49,12 +49,24 @@ public:
         glUniform1i(glGetUniformLocation(glProgram, name.data()), value);
     }
 
-    void setMat4(const std::string &name, const glm::mat4 &mat) const {
-        glUniformMatrix4fv(glGetUniformLocation(glProgram, name.data()), 1, GL_FALSE, &mat[0][0]);
+    void setFloat(const std::string &name, float value) const {
+        glUniform1f(glGetUniformLocation(glProgram, name.data()), value);
+    }
+
+    void setVec3(const std::string &name, const glm::vec3 &value) const {
+        glUniform3fv(glGetUniformLocation(glProgram, name.data()), 1, &value[0]);
+    }
+
+    void setVec4(const std::string &name, const glm::vec4 &value) const {
+        glUniform4fv(glGetUniformLocation(glProgram, name.data()), 1, &value[0]);
     }
 
     void setMat3(const std::string &name, const glm::mat3 &mat) const {
         glUniformMatrix3fv(glGetUniformLocation(glProgram, name.data()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    void setMat4(const std::string &name, const glm::mat4 &mat) const {
+        glUniformMatrix4fv(glGetUniformLocation(glProgram, name.data()), 1, GL_FALSE, &mat[0][0]);
     }
 
     void setMVPMatrices(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection);

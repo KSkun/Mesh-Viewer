@@ -41,23 +41,32 @@ int main() {
         return -1;
     }
 
-    ShaderProgram program("../src/shader/common.vert", "../src/shader/ambient.frag");
+    ShaderProgram program("../src/shader/common.vert", "../src/shader/phong.frag");
     Model lumine("../resource/lumine/Lumine.obj", &program);
 
-    glm::mat4 model = glm::identity<glm::mat4>();
-    glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 10.0f, 20.0f),
-                                 glm::vec3(0.0f, 10.0f, 0.0f),
-                                 glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float) width / height,
-                                            0.1f, 100.0f);
+    glm::vec3 eyePos(0.0f, 10.0f, 20.0f),
+            lookatPos(0.0f, 10.0f, 0.0f);
+    float fov = glm::radians(60.0f);
+
+    glm::vec3 lightPos(0.0f, 10.0f, 5.0f),
+            lightColor(1.0f, 1.0f, 1.0f),
+            lightAmbient(1.0f, 1.0f, 1.0f);
 
     glViewport(0, 0, width, height);
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glm::mat4 model = glm::identity<glm::mat4>();
+        glm::mat4 view = glm::lookAt(eyePos, lookatPos, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 projection = glm::perspective(fov, (float) width / height, 0.1f, 100.0f);
+
         program.setMVPMatrices(model, view, projection);
-        program.setInt("texDiffuse", 0);
+        program.setVec3("eyePos", eyePos);
+        program.setVec3("light.position", lightPos);
+        program.setVec3("light.ambient", lightAmbient);
+        program.setVec3("light.diffuse", lightColor);
+        program.setVec3("light.specular", lightColor);
         lumine.draw();
 
         glfwSwapBuffers(window);

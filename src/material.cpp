@@ -5,6 +5,7 @@
 #include "material.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+
 #include <stb_image.h>
 
 #include <utility>
@@ -49,4 +50,16 @@ void Material::use() const {
     for (int i = 0; i < textures.size(); i++) {
         textures[i]->use(i);
     }
+}
+
+PhongMaterial::PhongMaterial(ShaderProgram *program, std::vector<Texture2D *> textures,
+                             int texDiffuse, int texSpecular, float shininess) :
+        Material(program, std::move(textures)),
+        texDiffuse(texDiffuse), texSpecular(texSpecular), shininess(shininess) {}
+
+void PhongMaterial::use() const {
+    program->setInt("material.diffuse", texDiffuse);
+    program->setInt("material.specular", texSpecular);
+    program->setFloat("material.shininess", shininess);
+    Material::use();
 }

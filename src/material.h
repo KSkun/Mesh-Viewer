@@ -44,4 +44,17 @@ protected:
     std::vector<Texture2D *> textures;
 };
 
+class PhongMaterial : public Material {
+public:
+    PhongMaterial() {}
+
+    PhongMaterial(ShaderProgram *program, std::vector<Texture2D *> textures, int texDiffuse, int texSpecular, float shininess);
+
+    void use() const override;
+
+protected:
+    int texDiffuse, texSpecular;
+    float shininess;
+};
+
 #endif //MESH_VIEWER_MATERIAL_H

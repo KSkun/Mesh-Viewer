@@ -64,9 +64,9 @@ Model::Model(const std::string &path, ShaderProgram *program) : program(program)
         std::throw_with_nested("unable to load model " + path);
     }
     auto objDir = std::filesystem::path(path).parent_path().string();
-    for (const auto &_material : loader->LoadedMaterials) {
-        materials[_material.name] = new Material(program,
-                                                 {loadTexture(objDir + "/" + _material.map_Kd)});
+    for (const auto &_material: loader->LoadedMaterials) {
+        materials[_material.name] = new PhongMaterial(program, {loadTexture(objDir + "/" + _material.map_Kd)},
+                                                      0, 0, _material.Ns);
     }
     for (const auto &_mesh: loader->LoadedMeshes) {
         meshes.push_back(new Mesh(_mesh, materials[_mesh.MeshMaterial.name]));
@@ -78,10 +78,10 @@ Model::~Model() {
     for (const auto mesh: meshes) {
         delete mesh;
     }
-    for (const auto material : materials) {
+    for (const auto &material: materials) {
         delete material.second;
     }
-    for (const auto texture : textures) {
+    for (const auto &texture: textures) {
         delete texture.second;
     }
 }
