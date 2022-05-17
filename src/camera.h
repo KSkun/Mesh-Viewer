@@ -25,7 +25,7 @@ public:
 
     void handleMouseInput(float x, float y, bool pressed);
 
-    void handleKeyboardInput(int key);
+    void handleKeyboardInput(int key, float deltaTime);
 
     void handleScrollInput(float y);
 

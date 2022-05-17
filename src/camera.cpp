@@ -7,7 +7,7 @@
 #include <glfw/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-static const float cameraMouseSpeed = 0.05f, cameraKeyboardSpeed = 1.0f, cameraScroolSpeed = 5.0f;
+static const float cameraMouseSpeed = 0.05f, cameraKeyboardSpeed = 10.0f, cameraScroolSpeed = 5.0f;
 
 Camera::Camera(glm::vec3 position, float fov) :
     position(position), fov(fov) {}
@@ -40,15 +40,15 @@ void Camera::handleMouseInput(float x, float y, bool pressed) {
     lastMouse[1] = y;
 }
 
-void Camera::handleKeyboardInput(int key) {
+void Camera::handleKeyboardInput(int key, float deltaTime) {
     if (key == GLFW_KEY_W) {
-        position += front * cameraKeyboardSpeed;
+        position += front * cameraKeyboardSpeed * deltaTime;
     } else if (key == GLFW_KEY_S) {
-        position -= front * cameraKeyboardSpeed;
+        position -= front * cameraKeyboardSpeed * deltaTime;
     } else if (key == GLFW_KEY_A) {
-        position -= right * cameraKeyboardSpeed;
+        position -= right * cameraKeyboardSpeed * deltaTime;
     } else if (key == GLFW_KEY_D) {
-        position += right * cameraKeyboardSpeed;
+        position += right * cameraKeyboardSpeed * deltaTime;
     }
 }
 
