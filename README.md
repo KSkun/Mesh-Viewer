@@ -41,6 +41,8 @@ This project is configured for Windows 11 64-bit & MSVC 2022. If you are using a
 - Open `Mesh-Viewer.sln` and build project in Visual Studio.
 - Find binaries in `Release` directory.
 
+Currently, shader & resource path is hard-coded in `main.cpp`, so the `Mesh-Viewer.exe` file should be placed at a `bin` directory, along with `src/shader` and `resource` directory. Please refer to [the v0.1 release pack](https://github.com/KSkun/Mesh-Viewer/releases/download/v0.1/Mesh-Viewer_0.1_win64.zip).
+
 ## Resources
 
 ### 3rd Party Libraries
