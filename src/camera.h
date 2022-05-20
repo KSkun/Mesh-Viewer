@@ -11,7 +11,9 @@ class Camera {
 public:
     Camera() {}
 
-    Camera(glm::vec3 position, float fov = 60.0f);
+    explicit Camera(glm::vec3 position, float fov = 60.0f);
+
+    virtual ~Camera() = default;
 
     [[nodiscard]] glm::mat4 getViewMatrix() const;
 
@@ -23,11 +25,11 @@ public:
         return position;
     }
 
-    void handleMouseInput(float x, float y, bool pressed);
+    virtual void handleMouseInput(float x, float y, bool pressed);
 
-    void handleKeyboardInput(int key, float deltaTime);
+    virtual void handleKeyboardInput(int key, float deltaTime);
 
-    void handleScrollInput(float y);
+    virtual void handleScrollInput(float y);
 
 protected:
     glm::vec3 position,
@@ -38,6 +40,28 @@ protected:
 
     bool firstMouseInput = true;
     float lastMouse[2];
+};
+
+class ModelRotationCamera : public Camera {
+public:
+    ModelRotationCamera() = default;
+
+    explicit ModelRotationCamera(glm::vec3 center = {0.0f, 0.0f, 0.0f},
+                                 float distance = 10.0f) :
+            Camera(center - glm::vec3(0.0f, 0.0f, -distance), 60.0f),
+            center(center), distance(distance) {}
+
+    ~ModelRotationCamera() override = default;
+
+    void handleMouseInput(float x, float y, bool pressed) override;
+
+    void handleKeyboardInput(int key, float deltaTime) override;
+
+    void handleScrollInput(float y) override;
+
+protected:
+    glm::vec3 center;
+    float distance;
 };
 
 #endif //MESH_VIEWER_CAMERA_H

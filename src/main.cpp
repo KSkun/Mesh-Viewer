@@ -55,7 +55,7 @@ int main() {
 
     ShaderProgram program("../src/shader/common.vert", "../src/shader/phong.frag");
     Model lumine("../resource/lumine/Lumine.obj", &program);
-    camera = new Camera({0.0f, 10.0f, 20.0f});
+    camera = new ModelRotationCamera({0.0f, 10.0f, 0.0f}, 20.0f);
     lastTime = glfwGetTime();
 
     glm::vec3 lightPos(0.0f, 10.0f, 5.0f),
